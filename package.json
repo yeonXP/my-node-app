@@ -1,12 +1,6 @@
 {
-	"name": "my-node-app",
-	"version": "1.0.0",
-	"scripts": {
-		"test": "jest",
-		"build": "esbuild src/index.js --bundle --minify --platform=node outfile=dist/index.js"
-	},
-	"devDependencies": {
-	"jest": "^29.0.0",
-	"esbuild": "^0.19.0"
-	}
+  "scripts": {
+    "test": "echo \"No tests yet\"",
+    "build": "esbuild src/index.js --bundle --minify --platform=node --outfile=dist/index.js"
+  }
 }
