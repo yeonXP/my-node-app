@@ -2,5 +2,8 @@
   "scripts": {
     "test": "echo \"No tests yet\"",
     "build": "esbuild src/index.js --bundle --minify --platform=node --outfile=dist/index.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
   }
 }
