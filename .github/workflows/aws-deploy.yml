@@ -20,12 +20,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
       # 3단계: 의존성 설치(package-lock.json 기준) 후 테스트 실행
       - name: 3. 의존성 설치 및 테스트
         run: |
-          npm ci
+          npm install
           npm test
 
       # 4단계: esbuild로 src → dist 빌드
