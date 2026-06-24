@@ -1,0 +1,47 @@
+# 워크플로우 이름 (GitHub Actions 탭에 표시됨)
+name: Node.js to AWS S3 CI/CD
+
+# 트리거: main 브랜치에 push 이벤트가 발생할 때 실행
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # GitHub이 제공하는 Ubuntu 환경에서 실행
+
+    steps:
+      # 1단계: 저장소 코드를 Runner에 체크아웃
+      - name: 1. 코드 체크아웃
+        uses: actions/checkout@v4
+
+      # 2단계: Node.js 20 버전 설치 및 npm 캐시 활성화
+      - name: 2. Node.js 설치
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # 3단계: 의존성 설치(package-lock.json 기준) 후 테스트 실행
+      - name: 3. 의존성 설치 및 테스트
+        run: |
+          npm ci
+          npm test
+
+      # 4단계: esbuild로 src → dist 빌드
+      - name: 4. 프로젝트 빌드
+        run: |
+          npm run build
+
+      # 5단계: GitHub Secrets에 저장된 AWS 자격 증명 주입
+      - name: 5. AWS 자격 증명 설정
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      # 6단계: dist/ 폴더 내용을 S3 버킷과 동기화
+      - name: 6. S3에 배포
+        run: |
+          aws s3 sync ./dist s3://newnewnew333 --delete
